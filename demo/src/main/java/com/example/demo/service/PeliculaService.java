@@ -7,5 +7,9 @@ import java.util.Optional;
 public interface PeliculaService {
     List<Pelicula> getAllPeliculas();
     Optional<Pelicula> getPeliculaById(Long id);
+
+    Pelicula creatPelicula(Pelicula pelicula);
+    Pelicula updatePelicula(Long id, Pelicula pelicula);
+    void deletePelicula(Long id);
     
 }
