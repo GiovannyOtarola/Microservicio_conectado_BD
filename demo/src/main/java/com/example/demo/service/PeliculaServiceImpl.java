@@ -35,12 +35,10 @@ public class PeliculaServiceImpl implements PeliculaService{
         if(peliculaRepository.existsById(id)){
             pelicula.setId(id);
             return peliculaRepository.save(pelicula);
-        }
-            else{
+        }    else {
                 return null;
             }
-        
-    }
+        }
 
     @Override
     public void deletePelicula(Long id){
