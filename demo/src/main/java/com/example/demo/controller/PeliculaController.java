@@ -59,14 +59,16 @@ public class PeliculaController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPeliculaById(@PathVariable Long id) {
-    Optional<Pelicula> pelicula = peliculaService.getPeliculaById(id);
-    
-    if (pelicula.isPresent()) {
-        return ResponseEntity.ok(pelicula.get());
-    } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El ID de la película no fue encontrado");
-    }
+    public EntityModel<Pelicula> getPeliculaById(@PathVariable Long id) {
+        Optional<Pelicula> pelicula = peliculaService.getPeliculaById(id);
+
+        if (pelicula.isPresent()) {
+            return EntityModel.of(pelicula.get(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getPeliculaById(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllPeliculas()).withRel("all-peliculas"));
+        } else {
+            throw new PeliculaNotFoundException("Pelicula no encontrada con id: " + id);
+        }
     }
 
     @PostMapping
