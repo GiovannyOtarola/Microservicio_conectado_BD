@@ -7,6 +7,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,13 +73,21 @@ public class PeliculaController {
     }
 
     @PostMapping
-    public Pelicula createPelicula(@RequestBody Pelicula pelicula){
-        return peliculaService.createPelicula(pelicula);
+    public EntityModel<Pelicula> createPelicula(@Validated @RequestBody Pelicula pelicula) {
+        Pelicula createdPelicula = peliculaService.createPelicula(pelicula);
+            return EntityModel.of(createdPelicula,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getPeliculaById(createdPelicula.getId())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllPeliculas()).withRel("all-peliculas"));
+
     }
     
     @PutMapping("/{id}")
-    public Pelicula updatePelicula(@PathVariable Long id, @RequestBody Pelicula pelicula) {     
-        return peliculaService.updatePelicula(id, pelicula);
+    public EntityModel<Pelicula> updatePelicula(@PathVariable Long id, @RequestBody Pelicula pelicula) {
+        Pelicula updatedPelicula = peliculaService.updatePelicula(id, pelicula);
+        return EntityModel.of(updatedPelicula,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getPeliculaById(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllPeliculas()).withRel("all-peliculas"));
+
     }
 
     @DeleteMapping("/{id}")
